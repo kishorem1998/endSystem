@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="117b22da-9738-4ad2-8f97-e2b1bdfa5b90" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="listner-demoFlow" doc:id="8f6044de-5667-4def-a049-4b76e20b65f7" >
+		<http:listener doc:name="Listener" doc:id="ad6ec229-df96-4b71-a4c6-f9ae6f55f9c6" config-ref="HTTP_Listener_config" path="/customers"/>
+		<ee:transform doc:name="Transform Message" doc:id="e3b20392-9528-44ec-8ea6-d4ab570142d4">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"name" : "hi"
+}]]></ee:set-payload>
+			</ee:message>
+			<ee:variables>
+				<ee:set-variable variableName="uniqueId"><![CDATA[%dw 2.0
+output application/json
+---
+correlationId]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<!-- <set-variable value="123" doc:name="customerId" doc:id="a08be763-abc4-4c60-b168-5803d7d64a0e" variableName="customerId"/>
+		<ee:transform doc:name="Transform Message" doc:id="3b9d5af4-de9a-4da0-a3f3-1506bcf4ab6d" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+-&#45;&#45;
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	 --></flow>
+</mule>
